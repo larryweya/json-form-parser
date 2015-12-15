@@ -14,7 +14,7 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-    <php></php>
+    <php/>
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener" />
     </listeners>
