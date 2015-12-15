@@ -42,20 +42,37 @@ class SchemaTransformer {
             }
             else
             {
-                // check if value is set and transform to native type
-                if(isset($inputs[$fieldId]) && !!$inputs[$fieldId])
+                // check if value is set and not equal to "0" and transform to native type
+                if(isset($inputs[$fieldId]))
                 {
-                    if(count($parentIds) > 0)
+                    $inputValue = $inputs[$fieldId];
+                    // trim before we test for emptyness
+                    // if array, we need to map on it
+                    if(is_array($inputValue))
                     {
-                        $input = $inputs[$fieldId][$index];
+                        $inputValue = array_map(function($value) {
+                            return trim($value);
+                        }, $inputValue);
                     }
                     else
                     {
-                        $input = $inputs[$fieldId];
+                        $inputValue = trim($inputValue);
                     }
 
-                    // set value
-                    $values[$field["id"]] = static::convertToNativeType($field, $input);
+                    if($inputValue === "0" || !!$inputValue)
+                    {
+                        if(count($parentIds) > 0)
+                        {
+                            $input = $inputs[$fieldId][$index];
+                        }
+                        else
+                        {
+                            $input = $inputs[$fieldId];
+                        }
+
+                        // set value
+                        $values[$field["id"]] = static::convertToNativeType($field, $input);
+                    }
                 }
             }
         }
